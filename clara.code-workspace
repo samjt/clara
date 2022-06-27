@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "Clara",
+			"path": "../Documents/PlatformIO/Projects/Clara"
+		}
+	],
+	"settings": {}
+}
