@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <YA_FSM.h>
 
-YA_FSM myState;
+YA_FSM stateMachine;
 
 enum State
 {
@@ -17,6 +17,7 @@ const char *const stateName[] PROGMEM = {"DefaultPattern", "BlinkRed", "BlinkGre
 
 void setup()
 {
+	setupStateMachine();
 	// put your setup code here, to run once:
 }
 
@@ -27,7 +28,18 @@ void loop()
 
 void onStateBlink()
 {
-	myState.ActiveStateName();
+	const char *stateName = stateMachine.ActiveStateName();
+	Serial.println(stateName);
+}
+
+void onEntering()
+{
+	Serial.println("Entering State");
+}
+
+void onLeaving()
+{
+	Serial.println("Leaving State");
 }
 
 void setupStateMachine()
@@ -35,15 +47,15 @@ void setupStateMachine()
 
 	// Follow the order of defined enumeration for the state definition (will be used as index)
 	// Add States  => name, 		timeout, onEnter callback, onState cb, 	  onLeave cb
-	myState.AddState(stateName[BlinkRed], 0, onEntering, onStateBlink, onLeaving);
-	myState.AddState(stateName[BlinkGreen], 0, onEntering, onStateBlink, onLeaving);
-	myState.AddState(stateName[BlinkBlue], 0, onEntering, onStateBlink, onLeaving);
-	myState.AddState(stateName[BlinkYellow], 0, onEntering, onStateBlink, onLeaving);
+	stateMachine.AddState(stateName[BlinkRed], 0, onEntering, onStateBlink, onLeaving);
+	stateMachine.AddState(stateName[BlinkGreen], 0, onEntering, onStateBlink, onLeaving);
+	stateMachine.AddState(stateName[BlinkBlue], 0, onEntering, onStateBlink, onLeaving);
+	stateMachine.AddState(stateName[BlinkYellow], 0, onEntering, onStateBlink, onLeaving);
 
 	// Add transitions with related "trigger" callback functions
-	myState.AddTransition(BlinkRed, BlinkGreen, checkButton);
-	myState.AddTransition(BlinkGreen, BlinkBlue, checkButton);
-	// For this transition let'use a bool variable (must be global, because we need fix address)
-	myState.AddTransition(BlinkBlue, BlinkRed, dummyBoolVar);
-	myState.AddTransition(BlinkBlue, BlinkRed, dummyBoolVar);
+	// stateMachine.AddTransition(BlinkRed, BlinkGreen, checkButton);
+	// stateMachine.AddTransition(BlinkGreen, BlinkBlue, checkButton);
+	// // For this transition let'use a bool variable (must be global, because we need fix address)
+	// stateMachine.AddTransition(BlinkBlue, BlinkRed, dummyBoolVar);
+	// stateMachine.AddTransition(BlinkBlue, BlinkRed, dummyBoolVar);
 }
