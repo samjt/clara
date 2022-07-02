@@ -39,7 +39,8 @@ void setupStateMachine()
 	stateMachine.AddTransition(DefaultPattern, BlinkGreen, greenActive);
 	stateMachine.AddTransition(DefaultPattern, BlinkBlue, blueActive);
 	stateMachine.AddTransition(DefaultPattern, BlinkYellow, yellowActive);
-	// stateMachine.AddTransition(BlinkGreen, BlinkBlue, checkButton);
+	
+	stateMachine.AddTransition(BlinkRed, DefaultPattern, !(redActive && greenActive && blueActive);
 	// // For this transition let'use a bool variable (must be global, because we need fix address)
 	// stateMachine.AddTransition(BlinkBlue, BlinkRed, dummyBoolVar);
 	// stateMachine.AddTransition(BlinkBlue, BlinkRed, dummyBoolVar);
