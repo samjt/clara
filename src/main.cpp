@@ -3,7 +3,7 @@
 
 YA_FSM stateMachine;
 
-const byte RED_BUTTON = 2;
+const byte RED_BUTTON = 8;
 const byte GREEN_BUTTON = 3;
 const byte BLUE_BUTTON = 4;
 const byte YELLOW_BUTTON = 5;
@@ -25,6 +25,35 @@ bool redActive = false;
 bool greenActive = false;
 bool blueActive = false;
 bool yellowActive = false;
+
+void onStateDefault()
+{
+	const char *stateName = stateMachine.ActiveStateName();
+	Serial.println(stateName);
+}
+
+void onStateBlink()
+{
+	const char *stateName = stateMachine.ActiveStateName();
+	Serial.println(stateName);
+}
+
+void onEntering()
+{
+	Serial.println("Entering State");
+}
+
+void onLeaving()
+{
+	Serial.println("Leaving State");
+}
+
+bool transitionState()
+{
+	const char *stateName = stateMachine.ActiveStateName();
+	Serial.println(stateName);
+	return true;
+}
 
 void setupStateMachine()
 {
@@ -54,6 +83,7 @@ void setup()
 	Serial.begin(115200);
 
 	setupStateMachine();
+	Serial.println("Setup");
 	// put your setup code here, to run once:
 }
 
@@ -63,38 +93,12 @@ void loop()
 	greenActive = (digitalRead(GREEN_BUTTON) == LOW);
 	blueActive = (digitalRead(BLUE_BUTTON) == LOW);
 	yellowActive = (digitalRead(YELLOW_BUTTON) == LOW);
+
+	// Serial.print("redActive");
+	// Serial.print(redActive);
 	if (stateMachine.Update())
 	{
 		Serial.print(F("Active state: "));
 		Serial.println(stateMachine.ActiveStateName());
 	}
-}
-
-void onStateDefault()
-{
-	const char *stateName = stateMachine.ActiveStateName();
-	Serial.println(stateName);
-}
-
-void onStateBlink()
-{
-	const char *stateName = stateMachine.ActiveStateName();
-	Serial.println(stateName);
-}
-
-void onEntering()
-{
-	Serial.println("Entering State");
-}
-
-void onLeaving()
-{
-	Serial.println("Leaving State");
-}
-
-bool transitionState()
-{
-	const char *stateName = stateMachine.ActiveStateName();
-	Serial.println(stateName);
-	return true;
 }
