@@ -92,7 +92,7 @@ bool transitionState()
 	}
 }
 
-void handleClick(char buttonId)
+void handleClick(int buttonId)
 {
 	Serial.println(stateName[buttonId]);
 	switch (buttonId)
@@ -116,7 +116,7 @@ void handleClick(char buttonId)
 
 void setupButtons()
 {
-	redButton.attachClick(handleClick,stateName[RED]);
+	redButton.attachClick(handleClick,RED);
 	greenButton.attachClick(handleClick, GREEN);
 	blueButton.attachClick(handleClick, BLUE);
 	yellowButton.attachClick(handleClick, YELLOW);
