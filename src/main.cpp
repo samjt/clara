@@ -33,29 +33,21 @@ bool redActive = false;
 bool greenActive = false;
 bool blueActive = false;
 bool yellowActive = false;
-// OneButton *redButton;
+
 
 FSM_State *previousState;
 
 void onStateHolding()
 {
-	if (stateMachine.CurrentState()->index != previousState->index)
-	{
 
-		const char *stateName = stateMachine.ActiveStateName();
-		Serial.println(stateName);
-	}
+	// const char *stateName = stateMachine.ActiveStateName();
+	// Serial.println(stateName);
 }
 
 void onStateBlink()
 {
-
-	if (stateMachine.CurrentState()->index != previousState->index)
-	{
-
-		const char *stateName = stateMachine.ActiveStateName();
-		Serial.println(stateName);
-	}
+	// const char *stateName = stateMachine.ActiveStateName();
+	// Serial.println(stateName);
 }
 
 void onEntering()
@@ -68,33 +60,9 @@ void onLeaving()
 	Serial.println("Leaving State");
 }
 
-bool transitionState()
+void handleClick(enum State buttonId)
 {
-	Serial.println(stateMachine.ActiveStateName());
-	int stateIndex = stateMachine.CurrentState()->index;
-	byte button;
-	switch (stateIndex)
-	{
-	case BLUE:
-		button = BLUE_BUTTON;
-		break;
-	case RED:
-		button = RED_BUTTON;
-		break;
-	case YELLOW:
-		button = YELLOW_BUTTON;
-		break;
-	case GREEN:
-		button = GREEN_BUTTON;
-		break;
-	default:
-		break;
-	}
-}
-
-void handleClick(int buttonId)
-{
-	Serial.println(stateName[buttonId]);
+	// Serial.println(stateName[buttonId]);
 	switch (buttonId)
 	{
 	case BLUE:
@@ -116,10 +84,14 @@ void handleClick(int buttonId)
 
 void setupButtons()
 {
-	redButton.attachClick(handleClick,RED);
-	greenButton.attachClick(handleClick, GREEN);
-	blueButton.attachClick(handleClick, BLUE);
-	yellowButton.attachClick(handleClick, YELLOW);
+	int red = RED;
+	int green = GREEN;
+	int blue = BLUE;
+	int yellow = YELLOW;
+	redButton.attachClick(handleClick, red);
+	greenButton.attachClick(handleClick, green);
+	blueButton.attachClick(handleClick, blue);
+	yellowButton.attachClick(handleClick, yellow);
 }
 
 void setupStateMachine()
@@ -132,15 +104,10 @@ void setupStateMachine()
 
 	// Add transitions with related "trigger" callback functions
 	stateMachine.AddTransition(HOLDING, RED, redActive);
-	// stateMachine.AddTransition(HOLDING, GREEN, transitionState);
-	// stateMachine.AddTransition(HOLDING, BLUE, transitionState);
-	// stateMachine.AddTransition(HOLDING, YELLOW, transitionState);
+	stateMachine.AddTransition(HOLDING, GREEN, greenActive);
+	stateMachine.AddTransition(HOLDING, BLUE, blueActive);
+	stateMachine.AddTransition(HOLDING, YELLOW, yellowActive);
 	// stateMachine.AddTransition(RED, HOLDING, nullptr);
-
-	// stateMachine.AddTransition(BlinkRed, DefaultPattern, redActive);
-	// // For this transition let'use a bool variable (must be global, because we need fix address)
-	// stateMachine.AddTransition(BlinkBlue, BlinkRed, dummyBoolVar);
-	// stateMachine.AddTransition(BlinkBlue, BlinkRed, dummyBoolVar);
 }
 
 void setup()
