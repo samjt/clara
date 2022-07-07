@@ -8,5 +8,10 @@
 			"path": "../Documents/PlatformIO/Projects/Clara"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"__tuple": "cpp",
+			"array": "cpp"
+		}
+	}
 }
