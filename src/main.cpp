@@ -4,7 +4,7 @@
 //#include <jled_base.h>
 //#include <Wire.h>
 //#include <Adafruit_PWMServoDriver.h>
-#include "CustomJLED.cpp"
+#include "CustomJLED.h"
 YA_FSM stateMachine;
 
 const byte RED_BUTTON = 8;
