@@ -34,7 +34,6 @@ bool greenActive = false;
 bool blueActive = false;
 bool yellowActive = false;
 
-
 FSM_State *previousState;
 
 void onStateHolding()
@@ -46,8 +45,24 @@ void onStateHolding()
 
 void onStateBlink()
 {
-	// const char *stateName = stateMachine.ActiveStateName();
-	// Serial.println(stateName);
+
+	// switch (buttonId)
+	// {
+	// case BLUE:
+	// 	blueActive = true;
+	// 	break;
+	// case RED:
+	// 	redActive = true;
+	// 	break;
+	// case YELLOW:
+	// 	yellowActive = true;
+	// 	break;
+	// case GREEN:
+	// 	greenActive = true;
+	// 	break;
+	// default:
+	// 	break;
+	// }
 }
 
 void onEntering()
@@ -84,14 +99,15 @@ void handleClick(enum State buttonId)
 
 void setupButtons()
 {
-	int red = RED;
-	int green = GREEN;
-	int blue = BLUE;
-	int yellow = YELLOW;
-	redButton.attachClick(handleClick, red);
-	greenButton.attachClick(handleClick, green);
-	blueButton.attachClick(handleClick, blue);
-	yellowButton.attachClick(handleClick, yellow);
+	// int red = RED;
+	// int green = GREEN;
+	// int blue = BLUE;
+	// int yellow = YELLOW;
+
+	redButton.attachClick(handleClick, (void *)intptr_t(RED));
+	greenButton.attachClick(handleClick, (void *)intptr_t(GREEN));
+	blueButton.attachClick(handleClick, (void *)intptr_t(BLUE));
+	yellowButton.attachClick(handleClick, (void *)intptr_t(YELLOW));
 }
 
 void setupStateMachine()
@@ -107,7 +123,13 @@ void setupStateMachine()
 	stateMachine.AddTransition(HOLDING, GREEN, greenActive);
 	stateMachine.AddTransition(HOLDING, BLUE, blueActive);
 	stateMachine.AddTransition(HOLDING, YELLOW, yellowActive);
-	// stateMachine.AddTransition(RED, HOLDING, nullptr);
+	stateMachine.AddTransition(RED, HOLDING, nullptr);
+	// Reset the state trigger variable so we don't return
+	// to this state without another button press
+	stateMachine.AddAction(RED, YA_FSM::R, redActive);
+	stateMachine.AddAction(GREEN, YA_FSM::R, greenActive);
+	stateMachine.AddAction(BLUE, YA_FSM::R, blueActive);
+	stateMachine.AddAction(YELLOW, YA_FSM::R, yellowActive);
 }
 
 void setup()
@@ -129,8 +151,6 @@ void buttonTick()
 {
 	for (size_t i = 0; i < (sizeof(buttons) / sizeof(OneButton)); i++)
 	{
-		/* code */
-
 		buttons[i].tick();
 	}
 }
