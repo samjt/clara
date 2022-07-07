@@ -78,6 +78,11 @@ bool blueActive = false;
 bool yellowActive = false;
 
 FSM_State *previousState;
+
+JLed leds1[] = {
+    JLed(22).FadeOn(500).Repeat(10),
+    JLed(21).Off(),
+  };
 auto led1 = JLed(RED_LED).Blink(1000, 500).Forever();
 auto led2 = JLed(GREEN_LED).Blink(1000, 500).Forever();
 auto led3 = JLed(YELLOW_LED).Blink(1000, 500).Forever();

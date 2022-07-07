@@ -18,7 +18,7 @@
 //     uint32_t millis() const;
 //  }
 //
-class CustomHal
+class PCA9865Hal
 {
 public:
     using PinType = uint8_t;
@@ -49,7 +49,7 @@ private:
     PinType pin_;
 };
 
-class JLed : public jled::TJLed<CustomHal, JLed>
+class JLed : public jled::TJLed<PCA9865Hal, JLed>
 {
-    using jled::TJLed<CustomHal, JLed>::TJLed;
+    using jled::TJLed<PCA9865Hal, JLed>::TJLed;
 };
