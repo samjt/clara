@@ -1,13 +1,20 @@
 #include <Arduino.h>
 #include <YA_FSM.h>
 #include "OneButton.h"
-
+#include <jled_base.h>
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
+// #include "CustomJLED.cpp"
 YA_FSM stateMachine;
 
 const byte RED_BUTTON = 8;
 const byte GREEN_BUTTON = 3;
 const byte BLUE_BUTTON = 4;
 const byte YELLOW_BUTTON = 5;
+const byte RED_LED = 0;
+const byte GREEN_LED = 1;
+const byte YELLOW_LED = 2;
+const byte BLUE_LED = 3;
 
 OneButton redButton(RED_BUTTON, true);
 OneButton greenButton(GREEN_BUTTON, true);
@@ -15,6 +22,42 @@ OneButton blueButton(BLUE_BUTTON, true);
 OneButton yellowButton(YELLOW_BUTTON, true);
 
 OneButton buttons[] = {redButton, greenButton, blueButton, yellowButton};
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
+class CustomHal
+{
+public:
+	using PinType = uint8_t;
+
+	explicit CustomHal(PinType pin) noexcept : pin_(pin)
+	{
+	}
+
+	void analogWrite(uint8_t val) const
+	{
+		// some platforms, e.g. STM need lazy initialization
+		if (!setup_)
+		{
+			pwm.begin();
+			pwm.setPWMFreq(1600);
+			Wire.setClock(400000);
+			setup_ = true;
+		}
+		uint8_t mapped = map(val, 0, 255, 0, 4095);
+		pwm.setPWM(pin_, 0, mapped);
+	}
+
+	uint32_t millis() const { return ::millis(); }
+
+private:
+	mutable bool setup_ = false;
+	PinType pin_;
+};
+
+class JLed : public jled::TJLed<CustomHal, JLed>
+{
+	using jled::TJLed<CustomHal, JLed>::TJLed;
+};
 
 enum State
 {
@@ -35,6 +78,10 @@ bool blueActive = false;
 bool yellowActive = false;
 
 FSM_State *previousState;
+auto led1 = JLed(RED_LED).Blink(1000, 500).Forever();
+auto led2 = JLed(GREEN_LED).Blink(1000, 500).Forever();
+auto led3 = JLed(YELLOW_LED).Blink(1000, 500).Forever();
+auto led4 = JLed(BLUE_LED).Blink(1000, 500).Forever();
 
 void onStateHolding()
 {
@@ -168,6 +215,10 @@ void loop()
 	greenButton.tick();
 	blueButton.tick();
 	yellowButton.tick();
+	led1.Update();
+	led2.Update();
+	led3.Update();
+	led4.Update();
 
 	// Serial.print("redActive");
 	// Serial.print(redActive);
