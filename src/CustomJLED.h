@@ -7,8 +7,7 @@
 #include <jled_base.h>
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
-// a custom HAL for the Arduino, inverting output and ticking with half
-// the speed. In general, a JLed HAL class must satisfy the following
+// a custom HAL for the using PCA9865 PWM breakout board, In general, a JLed HAL class must satisfy the following
 // interface:
 //
 // class JledHal {
@@ -18,6 +17,7 @@
 //     uint32_t millis() const;
 //  }
 //
+  Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 class PCA9865Hal
 {
 public:
@@ -44,7 +44,6 @@ public:
     uint32_t millis() const { return ::millis(); }
 
 private:
-    Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
     mutable bool setup_ = false;
     PinType pin_;
 };
