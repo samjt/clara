@@ -1,10 +1,10 @@
 #include <Arduino.h>
 #include <YA_FSM.h>
 #include "OneButton.h"
-#include <jled_base.h>
-#include <Wire.h>
-#include <Adafruit_PWMServoDriver.h>
-// #include "CustomJLED.cpp"
+//#include <jled_base.h>
+//#include <Wire.h>
+//#include <Adafruit_PWMServoDriver.h>
+#include "CustomJLED.cpp"
 YA_FSM stateMachine;
 
 const byte RED_BUTTON = 8;
@@ -22,6 +22,7 @@ OneButton blueButton(BLUE_BUTTON, true);
 OneButton yellowButton(YELLOW_BUTTON, true);
 
 OneButton buttons[] = {redButton, greenButton, blueButton, yellowButton};
+/*
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
 class CustomHal
@@ -58,7 +59,7 @@ class JLed : public jled::TJLed<CustomHal, JLed>
 {
 	using jled::TJLed<CustomHal, JLed>::TJLed;
 };
-
+*/
 enum State
 {
 	HOLDING,
