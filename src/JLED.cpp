@@ -33,11 +33,12 @@ public:
         if (!setup_)
         {
             pwm.begin();
-            pwm.setPWMFreq(1600); // This is the maximum PWM frequency
+            pwm.setPWMFreq(1600);
             Wire.setClock(400000);
             setup_ = true;
         }
-        pwm.setPWM(pin_, 0, val);
+        uint8_t mapped = map(val, 0, 255, 0, 4095);
+        pwm.setPWM(pin_, 0, mapped);
     }
 
     uint32_t millis() const { return ::millis(); }
