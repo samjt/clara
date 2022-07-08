@@ -80,15 +80,40 @@ bool yellowActive = false;
 
 FSM_State *previousState;
 
-JLed leds1[] = {
-    JLed(22).FadeOn(500).Repeat(10),
-    JLed(21).Off(),
-  };
-auto led1 = JLed(RED_LED).Blink(1000, 500).Forever();
-auto led2 = JLed(GREEN_LED).Blink(1000, 500).Forever();
-auto led3 = JLed(YELLOW_LED).Blink(1000, 500).Forever();
-auto led4 = JLed(BLUE_LED).Blink(1000, 500).Forever();
+JLed defaultPattern[] = {
+   JLed(RED_LED).Breathe(1000, 500).Forever();
+JLed(GREEN_LED).Breathe(1000, 500).Forever();
+JLed(YELLOW_LED).Blink(1000, 500).Forever();
+JLed(BLUE_LED).Breathe(1000, 500).Forever();
 
+  };
+  JLed redPattern[] = {
+JLed(RED_LED).Candle().Forever();
+JLed(GREEN_LED).Blink(300, 300).Repeat(2);
+JLed(YELLOW_LED).Blink(300, 300).Repeat(2);
+JLed(BLUE_LED).Blink(300, 300).Repeat(2);
+  };
+ JLed greenPattern[] = {
+JLed(RED_LED).Blink(1000, 500).Forever();
+JLed(GREEN_LED).Blink(1000, 500).Forever();
+JLed(YELLOW_LED).Blink(1000, 500).Forever();
+JLed(BLUE_LED).Blink(1000, 500).Forever();
+  };
+  
+   JLed bluePattern[] = {
+JLed(RED_LED).Blink(1000, 500).Forever();
+JLed(GREEN_LED).Blink(1000, 500).Forever();
+JLed(YELLOW_LED).Blink(1000, 500).Forever();
+JLed(BLUE_LED).Blink(1000, 500).Forever();
+  };
+
+ JLed yellowPattern[] = {
+JLed(RED_LED).Blink(1000, 500).Forever();
+JLed(GREEN_LED).Blink(1000, 500).Forever();
+JLed(YELLOW_LED).Blink(1000, 500).Forever();
+JLed(BLUE_LED).Blink(1000, 500).Forever();
+  };
+  
 void onStateHolding()
 {
 
@@ -98,6 +123,7 @@ void onStateHolding()
 
 void onStateBlink()
 {
+
 
 	// switch (buttonId)
 	// {
