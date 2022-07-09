@@ -23,7 +23,7 @@ class PCA9865Hal
 public:
     using PinType = uint8_t;
 
-    explicit CustomHal(PinType pin) noexcept : pin_(pin)
+    explicit PCA9865Hal(PinType pin) noexcept : pin_(pin)
     {
     }
 

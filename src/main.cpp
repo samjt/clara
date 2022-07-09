@@ -220,6 +220,7 @@ void setup()
 	Serial.begin(115200);
 	setupButtons();
 	setupStateMachine();
+	pinMode(12, INPUT_PULLUP);
 	Serial.println("Setup");
 	Serial.println(stateMachine.ActiveStateName());
 
@@ -237,7 +238,7 @@ void buttonTick()
 void loop()
 {
 	previousState = stateMachine.CurrentState();
-
+	Serial.println(digitalRead(12));
 	// redActive = (digitalRead(RED_BUTTON) == LOW);
 	// greenActive = (digitalRead(GREEN_BUTTON) == LOW);
 	// blueActive = (digitalRead(BLUE_BUTTON) == LOW);
