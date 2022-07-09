@@ -1,9 +1,7 @@
 #include <Arduino.h>
 #include <YA_FSM.h>
 #include "OneButton.h"
-//#include <jled_base.h>
-//#include <Wire.h>
-//#include <Adafruit_PWMServoDriver.h>
+#include <jled.h>
 #include "CustomJLED.h"
 YA_FSM stateMachine;
 
@@ -81,39 +79,42 @@ bool yellowActive = false;
 FSM_State *previousState;
 
 JLed defaultPattern[] = {
-   JLed(RED_LED).Breathe(1000, 500).Forever();
-JLed(GREEN_LED).Breathe(1000, 500).Forever();
-JLed(YELLOW_LED).Blink(1000, 500).Forever();
-JLed(BLUE_LED).Breathe(1000, 500).Forever();
+	JLed(RED_LED).Breathe(1000).Forever(),
+	JLed(GREEN_LED).Breathe(1000).Forever(),
+	JLed(YELLOW_LED).Breath(1000).Forever(),
+	JLed(BLUE_LED).Breathe(1000).Forever(),
+};
 
-  };
-  JLed redPattern[] = {
-JLed(RED_LED).Candle().Forever();
-JLed(GREEN_LED).Blink(300, 300).Repeat(2);
-JLed(YELLOW_LED).Blink(300, 300).Repeat(2);
-JLed(BLUE_LED).Blink(300, 300).Repeat(2);
-  };
- JLed greenPattern[] = {
-JLed(RED_LED).Blink(1000, 500).Forever();
-JLed(GREEN_LED).Blink(1000, 500).Forever();
-JLed(YELLOW_LED).Blink(1000, 500).Forever();
-JLed(BLUE_LED).Blink(1000, 500).Forever();
-  };
-  
-   JLed bluePattern[] = {
-JLed(RED_LED).Blink(1000, 500).Forever();
-JLed(GREEN_LED).Blink(1000, 500).Forever();
-JLed(YELLOW_LED).Blink(1000, 500).Forever();
-JLed(BLUE_LED).Blink(1000, 500).Forever();
-  };
+JLed redPattern[] = {
+	JLed(RED_LED).Candle().Forever(),
+	JLed(GREEN_LED).Blink(300, 300).Repeat(2),
+	JLed(YELLOW_LED).Blink(300, 300).Repeat(2),
+	JLed(BLUE_LED).Blink(300, 300).Repeat(2),
+};
 
- JLed yellowPattern[] = {
-JLed(RED_LED).Blink(1000, 500).Forever();
-JLed(GREEN_LED).Blink(1000, 500).Forever();
-JLed(YELLOW_LED).Blink(1000, 500).Forever();
-JLed(BLUE_LED).Blink(1000, 500).Forever();
-  };
-  
+JLed greenPattern[] = {
+	JLed(RED_LED).Blink(1000, 500).Forever(),
+	JLed(GREEN_LED).Blink(1000, 500).Forever(),
+	JLed(YELLOW_LED).Blink(1000, 500).Forever(),
+	JLed(BLUE_LED).Blink(1000, 500).Forever(),
+};
+
+JLed bluePattern[] = {
+	JLed(RED_LED).Blink(1000, 500).Forever(),
+	JLed(GREEN_LED).Blink(1000, 500).Forever(),
+	JLed(YELLOW_LED).Blink(1000, 500).Forever(),
+	JLed(BLUE_LED).Blink(1000, 500).Forever(),
+};
+
+JLed yellowPattern[] = {
+	JLed(RED_LED).Blink(1000, 500).Forever(),
+	JLed(GREEN_LED).Blink(1000, 500).Forever(),
+	JLed(YELLOW_LED).Blink(1000, 500).Forever(),
+	JLed(BLUE_LED).Blink(1000, 500).Forever(),
+};
+
+auto sequence = JLedSequence(JLedSequence::eMode::PARALLEL, defaultPattern).Repeat(5);
+
 void onStateHolding()
 {
 
@@ -123,7 +124,6 @@ void onStateHolding()
 
 void onStateBlink()
 {
-
 
 	// switch (buttonId)
 	// {
