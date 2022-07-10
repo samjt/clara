@@ -17,7 +17,8 @@
 //     uint32_t millis() const;
 //  }
 //
-  Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 class PCA9865Hal
 {
 public:
@@ -48,7 +49,33 @@ private:
     PinType pin_;
 };
 
-class JLed : public jled::TJLed<PCA9865Hal, JLed>
-{
-    using jled::TJLed<PCA9865Hal, JLed>::TJLed;
+
+namespace jled {
+class JLed : public TJLed<PCA9865Hal, JLed> {
+    using TJLed<PCA9865Hal, JLed>::TJLed;
 };
+
+// a group of JLed objects which can be controlled simultanously
+class JLedSequence : public TJLedSequence<JLed, JLedSequence> {
+    using TJLedSequence<JLed, JLedSequence>::TJLedSequence;
+};
+
+};  // namespace jled
+
+using JLed = jled::JLed;
+using JLedSequence = jled::JLedSequence;
+
+
+// class JledHal : public jled::TJLed<PCA9865Hal, JLed>
+// {
+//     using jled::TJLed<PCA9865Hal, JLed>::TJLed;
+// };
+// //     class JLed : public TJLed<JLedHalType, JLed> {
+// //     using TJLed<JLedHalType, JLed>::TJLed;
+// // };
+
+// // a group of JLed objects which can be controlled simultanously
+// // class JLedSequence : public TJLedSequence<JLed, JLedSequence>
+// // {
+// //     using TJLedSequence<JLed, JLedSequence>::TJLedSequence;
+// // };

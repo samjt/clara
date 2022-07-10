@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <YA_FSM.h>
 #include "OneButton.h"
-#include <jled.h>
 #include "CustomJLED.h"
 YA_FSM stateMachine;
 
@@ -20,44 +19,7 @@ OneButton blueButton(BLUE_BUTTON, true);
 OneButton yellowButton(YELLOW_BUTTON, true);
 
 OneButton buttons[] = {redButton, greenButton, blueButton, yellowButton};
-/*
-Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
-class CustomHal
-{
-public:
-	using PinType = uint8_t;
-
-	explicit CustomHal(PinType pin) noexcept : pin_(pin)
-	{
-	}
-
-	void analogWrite(uint8_t val) const
-	{
-		// some platforms, e.g. STM need lazy initialization
-		if (!setup_)
-		{
-			pwm.begin();
-			pwm.setPWMFreq(1600);
-			Wire.setClock(400000);
-			setup_ = true;
-		}
-		uint8_t mapped = map(val, 0, 255, 0, 4095);
-		pwm.setPWM(pin_, 0, mapped);
-	}
-
-	uint32_t millis() const { return ::millis(); }
-
-private:
-	mutable bool setup_ = false;
-	PinType pin_;
-};
-
-class JLed : public jled::TJLed<CustomHal, JLed>
-{
-	using jled::TJLed<CustomHal, JLed>::TJLed;
-};
-*/
 enum State
 {
 	HOLDING,
@@ -79,10 +41,10 @@ bool yellowActive = false;
 FSM_State *previousState;
 
 JLed defaultPattern[] = {
-	JLed(RED_LED).Breathe(1000).Forever(),
-	JLed(GREEN_LED).Breathe(1000).Forever(),
-	JLed(YELLOW_LED).Breath(1000).Forever(),
-	JLed(BLUE_LED).Breathe(1000).Forever(),
+	JLed(RED_LED).Breathe(250, 1000, 250).DelayAfter(1000).Forever(),
+	JLed(GREEN_LED).Breathe(250, 1000, 250).DelayAfter(1000).Forever(),
+	JLed(YELLOW_LED).Breathe(250, 1000, 250).DelayAfter(1000).Forever(),
+	JLed(BLUE_LED).Breathe(250, 1000, 250).DelayAfter(1000).Forever(),
 };
 
 JLed redPattern[] = {
@@ -124,29 +86,30 @@ void onStateHolding()
 
 void onStateBlink()
 {
-
-	// switch (buttonId)
-	// {
-	// case BLUE:
-	// 	blueActive = true;
-	// 	break;
-	// case RED:
-	// 	redActive = true;
-	// 	break;
-	// case YELLOW:
-	// 	yellowActive = true;
-	// 	break;
-	// case GREEN:
-	// 	greenActive = true;
-	// 	break;
-	// default:
-	// 	break;
-	// }
 }
 
 void onEntering()
 {
+	int state = stateMachine.GetState();
 	Serial.println("Entering State");
+	switch (state)
+	{
+	case BLUE:
+		break;
+	case RED:
+		Serial.println("RED SEQUENCE");
+		sequence = JLedSequence(JLedSequence::eMode::PARALLEL, redPattern).Repeat(5);
+		sequence.Reset();
+		break;
+	case YELLOW:
+		sequence = JLedSequence(JLedSequence::eMode::PARALLEL, yellowPattern).Repeat(5);
+		sequence.Reset();
+		break;
+	case GREEN:
+		break;
+	default:
+		break;
+	}
 }
 
 void onLeaving()
@@ -202,10 +165,10 @@ void setupStateMachine()
 	stateMachine.AddTransition(HOLDING, GREEN, greenActive);
 	stateMachine.AddTransition(HOLDING, BLUE, blueActive);
 	stateMachine.AddTransition(HOLDING, YELLOW, yellowActive);
-	stateMachine.AddTransition(RED, HOLDING, nullptr);
+	// stateMachine.AddTransition(RED, HOLDING, nullptr);
 	// Reset the state trigger variable so we don't return
 	// to this state without another button press
-	stateMachine.AddAction(RED, YA_FSM::R, redActive);
+	// stateMachine.AddAction(RED, YA_FSM::R, redActive);
 	stateMachine.AddAction(GREEN, YA_FSM::R, greenActive);
 	stateMachine.AddAction(BLUE, YA_FSM::R, blueActive);
 	stateMachine.AddAction(YELLOW, YA_FSM::R, yellowActive);
@@ -213,18 +176,13 @@ void setupStateMachine()
 
 void setup()
 {
-	// pinMode(RED_BUTTON, INPUT_PULLUP);
-	// pinMode(GREEN_BUTTON, INPUT_PULLUP);
-	// pinMode(BLUE_BUTTON, INPUT_PULLUP);
-	// pinMode(YELLOW_BUTTON, INPUT_PULLUP);
+
 	Serial.begin(115200);
 	setupButtons();
 	setupStateMachine();
 	pinMode(12, INPUT_PULLUP);
 	Serial.println("Setup");
 	Serial.println(stateMachine.ActiveStateName());
-
-	// put your setup code here, to run once:
 }
 
 void buttonTick()
@@ -237,8 +195,8 @@ void buttonTick()
 
 void loop()
 {
-	previousState = stateMachine.CurrentState();
-	Serial.println(digitalRead(12));
+	// previousState = stateMachine.CurrentState();
+	// Serial.println(digitalRead(12));
 	// redActive = (digitalRead(RED_BUTTON) == LOW);
 	// greenActive = (digitalRead(GREEN_BUTTON) == LOW);
 	// blueActive = (digitalRead(BLUE_BUTTON) == LOW);
@@ -248,13 +206,8 @@ void loop()
 	greenButton.tick();
 	blueButton.tick();
 	yellowButton.tick();
-	led1.Update();
-	led2.Update();
-	led3.Update();
-	led4.Update();
+	sequence.Update();
 
-	// Serial.print("redActive");
-	// Serial.print(redActive);
 	if (stateMachine.Update())
 	{
 		Serial.print(F("Active state: "));
