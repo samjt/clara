@@ -47,6 +47,20 @@ JLed defaultPattern[] = {
 	JLed(BLUE_LED).Breathe(250, 1000, 250).DelayAfter(1000).Forever(),
 };
 
+int LEDOne = 0;
+int LEDTwo = 1;
+int LEDThree = 2;
+int LEDFour = 3;
+
+int chasePosition[] = {0,1,2,3};
+
+JLed chaseTo[] = {
+JLed(chasePosition[0]).Breathe(100, 500, 100).DelayBefore(100),
+	JLed(chasePosition[1]).Breathe(100, 500, 100).DelayBefore(400),
+	JLed(chasePosition[2]).Breathe(100, 500, 100).DelayBefore(700),
+	JLed(chasePosition[3]).Breathe(100, 500, 100).DelayBefore(1000),
+};
+
 JLed redPattern[] = {
 	JLed(RED_LED).Candle().Forever(),
 	JLed(GREEN_LED).Blink(300, 300).Repeat(2),
@@ -115,6 +129,16 @@ void onEntering()
 void onLeaving()
 {
 	Serial.println("Leaving State");
+	int nextState = stateMachine.CurrentState().nextState;
+	rotate(chasePosition, firstLed, 4);
+	
+}
+
+void reOrder(int firstLed){
+ledCount = firstLed
+LEDOne = firstLed;
+LEDTwo
+
 }
 
 void handleClick(enum State buttonId)
