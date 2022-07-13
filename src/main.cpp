@@ -143,8 +143,11 @@ while(*startPointer != firstLed){
 
 JLed chaseTo[4];
 for (int x=0; x< len; x++){
+if (starterPointer+1 < 
+chasePosition[len -1]){
+Serial.printf("chase to %d", *starterPointer);
 chaseTo[x] = JLed(startPointer++).Breathe(100, 500, 100).DelayBefore(x*200 + 100);
-}
+}}
 
 }
 
