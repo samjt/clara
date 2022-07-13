@@ -47,12 +47,8 @@ JLed defaultPattern[] = {
 	JLed(BLUE_LED).Breathe(250, 1000, 250).DelayAfter(1000).Forever(),
 };
 
-int LEDOne = 0;
-int LEDTwo = 1;
-int LEDThree = 2;
-int LEDFour = 3;
 
-int chasePosition[] = {0,1,2,3};
+int chasePosition[] = {RED_LED, GREEN_LED, BLUE_LED, YELLOW_LED};
 
 JLed chaseTo[] = {
 JLed(chasePosition[0]).Breathe(100, 500, 100).DelayBefore(100),
@@ -129,15 +125,26 @@ void onEntering()
 void onLeaving()
 {
 	Serial.println("Leaving State");
-	int nextState = stateMachine.CurrentState().nextState;
-	rotate(chasePosition, firstLed, 4);
+	int nextState = stateMachine.CurrentState()->nextState->index;
+	rotate(nextState);
 	
 }
 
-void reOrder(int firstLed){
-ledCount = firstLed
-LEDOne = firstLed;
-LEDTwo
+void rotatae(int firstLed){
+
+int *startPointer = chasePosition;
+Serial.printf("Starter Pointer: %d", *startPointer);
+while(*startPointer != firstLed){
+ *startPointer++;
+ Serial.printf("Starter Pointer now: %d", *startPointer);
+ }
+ int len = sizeOf(chasePosition)/sizeOf(chasePosition[0]);
+
+
+JLed chaseTo[4];
+for (int x=0; x< len; x++){
+chaseTo[x] = JLed(startPointer++).Breathe(100, 500, 100).DelayBefore(x*200 + 100);
+}
 
 }
 
