@@ -47,11 +47,10 @@ JLed defaultPattern[] = {
 	JLed(BLUE_LED).Breathe(250, 1000, 250).DelayAfter(1000).Forever(),
 };
 
-
-int chasePosition[] = {RED_LED, GREEN_LED, BLUE_LED, YELLOW_LED};
+byte chasePosition[] = {RED_LED, GREEN_LED, BLUE_LED, YELLOW_LED};
 
 JLed chaseTo[] = {
-JLed(chasePosition[0]).Breathe(100, 500, 100).DelayBefore(100),
+	JLed(chasePosition[0]).Breathe(100, 500, 100).DelayBefore(100),
 	JLed(chasePosition[1]).Breathe(100, 500, 100).DelayBefore(400),
 	JLed(chasePosition[2]).Breathe(100, 500, 100).DelayBefore(700),
 	JLed(chasePosition[3]).Breathe(100, 500, 100).DelayBefore(1000),
@@ -126,34 +125,52 @@ void onLeaving()
 {
 	Serial.println("Leaving State");
 	int nextState = stateMachine.CurrentState()->nextState->index;
-	rotate(nextState);
-	
+	// rotate(nextState);
 }
 
-void rotatae(int firstLed){
+void rotateLeds(const byte firstLed)
+{
 
-int *startPointer = chasePosition;
-Serial.printf("Starter Pointer: %d", *startPointer);
-while(*startPointer != firstLed){
- *startPointer++;
- Serial.printf("Starter Pointer now: %d", *startPointer);
- }
- int len = sizeOf(chasePosition)/sizeOf(chasePosition[0]);
+	byte *startPointer = chasePosition;
+	Serial.println("startPointer initial position");
+	Serial.println(*startPointer);
+	Serial.println("firstLed");
+	Serial.println(firstLed);
+	// While the value of start pointer doesnt 
+	// match the led we're starting with, increment the pointer
+	while (*startPointer != firstLed)
+	{
+		startPointer++;
+		Serial.println("*startPointer after increment");
+		Serial.println(*startPointer);
+		// Serial.println("*startPointer index");
+		// Serial.println(startPointer - chasePosition);
+	}
+	int len = sizeof(chasePosition) / sizeof(chasePosition[0]);
 
+	Serial.println("len");
+	Serial.println(len);
+	// JLed chaseTo[4];
+	for (int x = 0; x < len; x++)
+	{
 
-JLed chaseTo[4];
-for (int x=0; x< len; x++){
-if (starterPointer+1 < 
-chasePosition[len -1]){
-Serial.printf("chase to %d", *starterPointer);
-chaseTo[x] = JLed(startPointer++).Breathe(100, 500, 100).DelayBefore(x*200 + 100);
-}}
-
+		Serial.println("*(startPointer in chase)");
+		Serial.println(startPointer - chasePosition);
+		// Serial.println(*startPointer);
+		// if (*(startPointer + 1) <
+		// 	(chasePosition[len - 1]))
+		// {
+		// 	Serial.println("chasePosition[x] now");
+		// 	Serial.println(chasePosition[x]);
+		// 	Serial.println("startPointer now");
+		// 	Serial.println(*startPointer);
+		// 	// chaseTo[x] = JLed(startPointer++).Breathe(100, 500, 100).DelayBefore(x * 200 + 100);
+		// }
+	}
 }
 
 void handleClick(enum State buttonId)
 {
-	// Serial.println(stateName[buttonId]);
 	switch (buttonId)
 	{
 	case BLUE:
@@ -175,11 +192,6 @@ void handleClick(enum State buttonId)
 
 void setupButtons()
 {
-	// int red = RED;
-	// int green = GREEN;
-	// int blue = BLUE;
-	// int yellow = YELLOW;
-
 	redButton.attachClick(handleClick, (void *)intptr_t(RED));
 	greenButton.attachClick(handleClick, (void *)intptr_t(GREEN));
 	blueButton.attachClick(handleClick, (void *)intptr_t(BLUE));
@@ -217,6 +229,13 @@ void setup()
 	pinMode(12, INPUT_PULLUP);
 	Serial.println("Setup");
 	Serial.println(stateMachine.ActiveStateName());
+	// Serial.println("Rotate 0");
+	// rotateLeds(RED_LED);
+	Serial.println("Rotate 2");
+	Serial.println(BLUE_LED);
+	rotateLeds(BLUE_LED);
+	// Serial.println("Rotate 1");
+	// rotateLeds(GREEN_LED);
 }
 
 void buttonTick()
@@ -229,13 +248,6 @@ void buttonTick()
 
 void loop()
 {
-	// previousState = stateMachine.CurrentState();
-	// Serial.println(digitalRead(12));
-	// redActive = (digitalRead(RED_BUTTON) == LOW);
-	// greenActive = (digitalRead(GREEN_BUTTON) == LOW);
-	// blueActive = (digitalRead(BLUE_BUTTON) == LOW);
-	// yellowActive = (digitalRead(YELLOW_BUTTON) == LOW);
-	// buttonTick();
 	redButton.tick();
 	greenButton.tick();
 	blueButton.tick();

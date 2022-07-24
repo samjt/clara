@@ -34,6 +34,7 @@ public:
         if (!setup_)
         {
             pwm.begin();
+            pwm.setOscillatorFrequency(27000000);
             pwm.setPWMFreq(1600);
             Wire.setClock(400000);
             setup_ = true;
@@ -49,22 +50,23 @@ private:
     PinType pin_;
 };
 
+namespace jled
+{
+    class JLed : public TJLed<PCA9865Hal, JLed>
+    {
+        using TJLed<PCA9865Hal, JLed>::TJLed;
+    };
 
-namespace jled {
-class JLed : public TJLed<PCA9865Hal, JLed> {
-    using TJLed<PCA9865Hal, JLed>::TJLed;
-};
+    // a group of JLed objects which can be controlled simultanously
+    class JLedSequence : public TJLedSequence<JLed, JLedSequence>
+    {
+        using TJLedSequence<JLed, JLedSequence>::TJLedSequence;
+    };
 
-// a group of JLed objects which can be controlled simultanously
-class JLedSequence : public TJLedSequence<JLed, JLedSequence> {
-    using TJLedSequence<JLed, JLedSequence>::TJLedSequence;
-};
-
-};  // namespace jled
+}; // namespace jled
 
 using JLed = jled::JLed;
 using JLedSequence = jled::JLedSequence;
-
 
 // class JledHal : public jled::TJLed<PCA9865Hal, JLed>
 // {
