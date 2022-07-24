@@ -130,7 +130,7 @@ void onLeaving()
 	
 }
 
-void rotatae(int firstLed){
+void rotate(int firstLed){
 
 int *startPointer = chasePosition;
 Serial.printf("Starter Pointer: %d", *startPointer);
