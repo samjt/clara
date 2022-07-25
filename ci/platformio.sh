@@ -9,4 +9,4 @@ curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installe
 #
 python3 get-platformio.py
 pio platform install "atmelavr" "espressif32"
-pio run -e uno
+pio run -v -e uno
