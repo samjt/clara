@@ -130,24 +130,28 @@ void onLeaving()
 	
 }
 
-void rotate(int firstLed){
 
-int *startPointer = chasePosition;
-Serial.printf("Starter Pointer: %d", *startPointer);
-while(*startPointer != firstLed){
- *startPointer++;
- Serial.printf("Starter Pointer now: %d", *startPointer);
- }
- int len = sizeOf(chasePosition)/sizeOf(chasePosition[0]);
+void rotate(int firstLed)
+{
 
+   int *startPointer = chasePosition;
+   printf("orignal %d \n", *chasePosition);
+   printf("Starter Pointer: %d \n", *startPointer);
+   while (*startPointer != firstLed)
+   {
+      startPointer++;
+      printf("Starter Pointer now: %d %d \n", *startPointer, startPointer);
+   }
+   // int len = sizeOf(chasePosition)/sizeOf(chasePosition[0]);//
 
-JLed chaseTo[4];
-for (int x=0; x< len; x++){
-if (starterPointer+1 < 
-chasePosition[len -1]){
-Serial.printf("chase to %d", *starterPointer);
-chaseTo[x] = JLed(startPointer++).Breathe(100, 500, 100).DelayBefore(x*200 + 100);
-}}
+   int n = 4;
+   int i = &chasePosition[4] - startPointer;
+   printf("index %d\n", i);
+   while (n--)
+   {
+      printf("position %d  ", chasePosition[i++ % 4]);
+   }
+   printf("\n");
 
 }
 
