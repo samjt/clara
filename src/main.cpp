@@ -87,6 +87,30 @@ JLed yellowPattern[] = {
 
 auto sequence = JLedSequence(JLedSequence::eMode::PARALLEL, defaultPattern).Repeat(5);
 
+void rotate(int firstLed)
+{
+
+   int *startPointer = chasePosition;
+   printf("orignal %d \n", *chasePosition);
+   printf("Starter Pointer: %d \n", *startPointer);
+   while (*startPointer != firstLed)
+   {
+      startPointer++;
+      printf("Starter Pointer now: %d %d \n", *startPointer, startPointer);
+   }
+   // int len = sizeOf(chasePosition)/sizeOf(chasePosition[0]);//
+
+   int n = 4;
+   int i = &chasePosition[4] - startPointer;
+   printf("index %d\n", i);
+   while (n--)
+   {
+      printf("position %d  ", chasePosition[i++ % 4]);
+   }
+   printf("\n");
+
+}
+
 void onStateHolding()
 {
 
@@ -130,30 +154,6 @@ void onLeaving()
 	
 }
 
-
-void rotate(int firstLed)
-{
-
-   int *startPointer = chasePosition;
-   printf("orignal %d \n", *chasePosition);
-   printf("Starter Pointer: %d \n", *startPointer);
-   while (*startPointer != firstLed)
-   {
-      startPointer++;
-      printf("Starter Pointer now: %d %d \n", *startPointer, startPointer);
-   }
-   // int len = sizeOf(chasePosition)/sizeOf(chasePosition[0]);//
-
-   int n = 4;
-   int i = &chasePosition[4] - startPointer;
-   printf("index %d\n", i);
-   while (n--)
-   {
-      printf("position %d  ", chasePosition[i++ % 4]);
-   }
-   printf("\n");
-
-}
 
 void handleClick(enum State buttonId)
 {
