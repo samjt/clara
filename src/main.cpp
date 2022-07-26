@@ -150,7 +150,7 @@ void onLeaving()
 {
 	Serial.println("Leaving State");
 	int nextState = stateMachine.CurrentState()->nextState->index;
-	rotate(nextState);
+	// rotate(nextState);
 	
 }
 
@@ -220,6 +220,8 @@ void setup()
 	setupStateMachine();
 	pinMode(12, INPUT_PULLUP);
 	Serial.println("Setup");
+	
+	rotate(RED_LED);
 	Serial.println(stateMachine.ActiveStateName());
 }
 
