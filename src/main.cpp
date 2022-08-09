@@ -1,3 +1,5 @@
+
+#include <stdio.h>
 #include <Arduino.h>
 #include <YA_FSM.h>
 #include "OneButton.h"
@@ -91,23 +93,27 @@ void rotate(int firstLed)
 {
 
    int *startPointer = chasePosition;
-   printf("orignal %d \n", *chasePosition);
-   printf("Starter Pointer: %d \n", *startPointer);
+  printf("orignal %d \n", *chasePosition);
+  printf("Starter Pointer: %d \n", *startPointer);
    while (*startPointer != firstLed)
    {
       startPointer++;
-      printf("Starter Pointer now: %d %d \n", *startPointer, startPointer);
+     printf("Starter Pointer now: %d %d \n", *startPointer, startPointer);
    }
    // int len = sizeOf(chasePosition)/sizeOf(chasePosition[0]);//
 
    int n = 4;
    int i = &chasePosition[4] - startPointer;
-   printf("index %d\n", i);
+
    while (n--)
    {
-      printf("position %d  ", chasePosition[i++ % 4]);
+   	int chaser = i++ % 4;
+     printf("position %d \n ", chasePosition[chaser]);
+    chaseTo[n] =  JLed(chasePosition[chaser]).Breathe(100, 500, 100).DelayBefore(n * 200 + 100);
+      printf("index: %d chaser: %d chasePosition %d\n", n, chaser, chasePosition[chaser]);
+
    }
-   printf("\n");
+  Serial.print("\n"); 
 
 }
 
@@ -179,15 +185,15 @@ void handleClick(enum State buttonId)
 
 void setupButtons()
 {
-	// int red = RED;
-	// int green = GREEN;
-	// int blue = BLUE;
-	// int yellow = YELLOW;
+         //void * red = &RED;
+	 //void * green = &GREEN;
+	 //void * blue = &BLUE;
+	 //void * yellow = &YELLOW;
 
-	redButton.attachClick(handleClick, (void *)intptr_t(RED));
-	greenButton.attachClick(handleClick, (void *)intptr_t(GREEN));
-	blueButton.attachClick(handleClick, (void *)intptr_t(BLUE));
-	yellowButton.attachClick(handleClick, (void *)intptr_t(YELLOW));
+	redButton.attachClick([](){handleClick(RED);});
+	greenButton.attachClick([](){handleClick(GREEN);});
+	blueButton.attachClick([](){handleClick(BLUE);});
+	yellowButton.attachClick([](){handleClick(YELLOW);});
 }
 
 void setupStateMachine()
@@ -222,6 +228,7 @@ void setup()
 	Serial.println("Setup");
 	
 	rotate(RED_LED);
+	rotate(BLUE_LED);
 	Serial.println(stateMachine.ActiveStateName());
 }
 
@@ -246,7 +253,7 @@ void loop()
 	greenButton.tick();
 	blueButton.tick();
 	yellowButton.tick();
-	sequence.Update();
+//	sequence.Update();
 
 	if (stateMachine.Update())
 	{
