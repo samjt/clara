@@ -9,4 +9,4 @@ curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installe
 #
 python3 get-platformio.py
 pio platform install "atmelavr" "espressif32"
-pio remote run -v -e uno -t upload 
+PLATFORMIO_AUTH_TOKEN=${PLATFORMIO_AUTH_TOKEN} pio remote run -v -e uno -t upload 
