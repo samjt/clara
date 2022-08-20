@@ -17,5 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build on PlatformIO
-        run: bash ci/platformio.sh
+    env:
+     PLATFORMIO_AUTH_TOKEN: ${{ secrets.PLATFORMIO_AUTH_TOKEN }}
+    run: bash ci/platformio.sh
  
