@@ -20,6 +20,5 @@ jobs:
       - shell: bash
         env:
            PLATFORMIO_AUTH_TOKEN: ${{ secrets.PLATFORMIO_AUTH_TOKEN }}
-        run:|
-           bash ci/platformio.sh
+        run: bash ci/platformio.sh
  
