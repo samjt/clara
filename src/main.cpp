@@ -5,12 +5,11 @@
 #include <YA_FSM.h>
 
 //#ifdef UNO
-  // #include <stdinout.h>
+// #include <stdinout.h>
 //#endif
 //#ifdef ESP32
- //#include <stdio.h>
+//#include <stdio.h>
 //#endif
-
 
 YA_FSM stateMachine;
 
@@ -30,10 +29,17 @@ OneButton yellowButton(YELLOW_BUTTON, true);
 
 OneButton buttons[] = {redButton, greenButton, blueButton, yellowButton};
 
-enum State { HOLDING, RED, GREEN, BLUE, YELLOW };
+enum State
+{
+  HOLDING,
+  RED,
+  GREEN,
+  BLUE,
+  YELLOW
+};
 
 // Helper for print labels instead integer when state change
-const char *const stateName[] PROGMEM = {"HOLDING", "RED", "GREEN", "BLUE","YELLOW"};
+const char *const stateName[] PROGMEM = {"HOLDING", "RED", "GREEN", "BLUE", "YELLOW"};
 
 // Button Triggers
 bool redActive = false;
@@ -51,7 +57,7 @@ int noteDurations[] = {
 
     4, 8, 8, 4, 4, 4, 4, 4};
 
-//FSM_State *previousState;
+// FSM_State *previousState;
 
 JLed defaultPattern[] = {
     JLed(RED_LED).Breathe(250, 1000, 250).DelayAfter(1000).Repeat(5),
@@ -100,9 +106,11 @@ JLed yellowPattern[] = {
 auto sequence =
     JLedSequence(JLedSequence::eMode::PARALLEL, defaultPattern).Repeat(3);
 
-void playMelody(int melody[], int noteDurations[], byte pinNumber) {
-  int tuneLength = 8;//sizeof(melody) / sizeof(melody[0]);
-  for (int thisNote = 0; thisNote < tuneLength; thisNote++) {
+void playMelody(int melody[], int noteDurations[], byte pinNumber)
+{
+  int tuneLength = 8; // sizeof(melody) / sizeof(melody[0]);
+  for (int thisNote = 0; thisNote < tuneLength; thisNote++)
+  {
     int noteDuration = 1000 / noteDurations[thisNote];
     tone(pinNumber, melody[thisNote], noteDurations[thisNote]);
 
@@ -112,54 +120,54 @@ void playMelody(int melody[], int noteDurations[], byte pinNumber) {
   }
 }
 
-void rotate(int firstLed) {
+void rotate(int firstLed)
+{
 
   int *startPointer = chasePosition;
-  //printf("orignal %d \n", *chasePosition);
-  //printf("Starter Pointer: %d \n", *startPointer);
-  while (*startPointer != firstLed) {
+  while (*startPointer != firstLed)
+  {
     startPointer++;
-    //printf("Starter Pointer now: %d %d \n", *startPointer, startPointer);
   }
-  // int len = sizeOf(chasePosition)/sizeOf(chasePosition[0]);//
 
   int n = 4;
   int i = &chasePosition[4] - startPointer;
 
-  while (n--) {
+  while (n--)
+  {
     int chaser = i++ % 4;
-    //printf("position %d \n ", chasePosition[chaser]);
     chaseTo[n] = JLed(chasePosition[chaser])
                      .Breathe(100, 500, 100)
                      .DelayBefore(n * 200 + 100);
-    //printf("index: %d chaser: %d chasePosition %d\n", n, chaser, chasePosition[chaser]);
   }
-  Serial.print("\n");
 }
 
-void onStateHolding() {
+void onStateHolding()
+{
 
-//   const char *stateName = stateMachine.ActiveStateName();
+  //   const char *stateName = stateMachine.ActiveStateName();
   // Serial.println(stateName);
 }
 
-void onStateBlink() {
-    if ( stateMachine.CurrentState()->timeout ) {
-        //printf("Timeout!");
-        holdingActive = true;
-   }
-
+void onStateBlink()
+{
+  if (stateMachine.CurrentState()->timeout)
+  {
+    // printf("Timeout!");
+    holdingActive = true;
+  }
 }
 
-void onEntering() {
+void onEntering()
+{
   int state = stateMachine.GetState();
   Serial.println("Entering State");
 
-  switch (state) {
+  switch (state)
+  {
   case BLUE:
-  
-        sequence = JLedSequence(JLedSequence::eMode::PARALLEL, bluePattern).Repeat(5);
-      sequence.Reset();
+
+    sequence = JLedSequence(JLedSequence::eMode::PARALLEL, bluePattern).Repeat(5);
+    sequence.Reset();
     break;
   case RED:
     Serial.println("RED SEQUENCE");
@@ -173,29 +181,37 @@ void onEntering() {
     sequence.Reset();
     break;
   case GREEN:
-        sequence = JLedSequence(JLedSequence::eMode::PARALLEL, greenPattern).Repeat(5);
-      sequence.Reset();
+    sequence = JLedSequence(JLedSequence::eMode::PARALLEL, greenPattern).Repeat(5);
+    sequence.Reset();
 
     break;
   default:
-  
-       // sequence = JLedSequence(JLedSequence::eMode::PARALLEL, defaultPattern).Repeat(3);
-      //sequence.Reset();
+
+    // sequence = JLedSequence(JLedSequence::eMode::PARALLEL, defaultPattern).Repeat(3);
+    // sequence.Reset();
     break;
   }
 }
 
-void onLeaving() {
+void onLeaving()
+{
   Serial.println("Leaving State");
   int nextState = stateMachine.CurrentState()->nextState->index;
-  // rotate(nextState);
+  if (nextState > 0)
+  {
+    rotate(nextState);
+  }
+  sequence = JLedSequence(JLedSequence::eMode::PARALLEL, chaseTo).Repeat(1);
+  sequence.Reset();
 }
 
-void handleClick(enum State buttonId) {
+void handleClick(enum State buttonId)
+{
   // Serial.println(stateName[buttonId]);
-  //printf("handle click %d", buttonId);
+  // printf("handle click %d", buttonId);
   holdingActive = false;
-  switch (buttonId) {
+  switch (buttonId)
+  {
   case BLUE:
     blueActive = true;
     break;
@@ -209,27 +225,32 @@ void handleClick(enum State buttonId) {
     greenActive = true;
     break;
   default:
-  holdingActive = true;
+    holdingActive = true;
     break;
   }
 }
 
-void setupButtons() {
+void setupButtons()
+{
   // void * red = &RED;
   // void * green = &GREEN;
   // void * blue = &BLUE;
   // void * yellow = &YELLOW;
 
-  redButton.attachClick([]() {
+  redButton.attachClick([]()
+                        {
     //printf("clicked");
-    handleClick(RED);
-  });
-  greenButton.attachClick([]() { handleClick(GREEN); });
-  blueButton.attachClick([]() { handleClick(BLUE); });
-  yellowButton.attachClick([]() { handleClick(YELLOW); });
+    handleClick(RED); });
+  greenButton.attachClick([]()
+                          { handleClick(GREEN); });
+  blueButton.attachClick([]()
+                         { handleClick(BLUE); });
+  yellowButton.attachClick([]()
+                           { handleClick(YELLOW); });
 }
 
-void setupStateMachine() {
+void setupStateMachine()
+{
   stateMachine.AddState(stateName[HOLDING], 0, onEntering, onStateHolding,
                         onLeaving);
   stateMachine.AddState(stateName[RED], 3000, onEntering, onStateBlink, onLeaving);
@@ -251,22 +272,23 @@ void setupStateMachine() {
   stateMachine.AddTransition(BLUE, HOLDING, holdingActive);
   // Reset the state trigger variable so we don't return
   // to this state without another button press
-//  stateMachine.AddAction(RED, YA_FSM::R, redActive);
+  //  stateMachine.AddAction(RED, YA_FSM::R, redActive);
   stateMachine.AddAction(GREEN, YA_FSM::R, greenActive);
   stateMachine.AddAction(BLUE, YA_FSM::R, blueActive);
   stateMachine.AddAction(YELLOW, YA_FSM::R, yellowActive);
 }
 
-void setup() {
+void setup()
+{
 
   Serial.begin(115200);
   setupButtons();
   setupStateMachine();
-  //pinMode(12, INPUT_PULLUP);
-  //printf("Setup Started");
+  // pinMode(12, INPUT_PULLUP);
+  // printf("Setup Started");
   playMelody(melody, noteDurations, SPEAKER_PIN);
-//  rotate(RED_LED);
-  //rotate(BLUE_LED);
+  //  rotate(RED_LED);
+  // rotate(BLUE_LED);
   Serial.println(stateMachine.ActiveStateName());
 }
 /*
@@ -277,9 +299,10 @@ void buttonTick() {
   }
 }
 */
-//int now, delayT;
+// int now, delayT;
 
-void loop() {
+void loop()
+{
   // previousState = stateMachine.CurrentState();
   // Serial.println(digitalRead(12));
   // redActive = (digitalRead(RED_BUTTON) == LOW);
@@ -308,7 +331,8 @@ void loop() {
   yellowButton.tick();
   sequence.Update();
 
-  if (stateMachine.Update()) {
+  if (stateMachine.Update())
+  {
     Serial.print(F("Active state: "));
     Serial.println(stateMachine.ActiveStateName());
   }
